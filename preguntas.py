@@ -11,7 +11,15 @@ Utilice el archivo `data.csv` para resolver las preguntas.
 
 
 """
+import csv
 
+
+def load_data(file_path):
+    with open(file_path, 'r') as file:
+        reader = csv.reader(file,delimiter="\t")
+        
+        data = list(reader)
+    return data
 
 def pregunta_01():
     """
@@ -21,7 +29,12 @@ def pregunta_01():
     214
 
     """
-    return
+    data = load_data(r"data.csv")
+    sum_second_column = sum(int(row[1]) for row in data)
+    
+    return sum_second_column
+
+
 
 
 def pregunta_02():
@@ -39,7 +52,15 @@ def pregunta_02():
     ]
 
     """
-    return
+    data = load_data(r"data.csv")
+    count_dict = {}
+    for row in data:
+        count_dict[row[0]] = count_dict.get(row[0], 0) + 1
+
+    sorted_count = sorted(count_dict.items())
+
+    return sorted_count
+
 
 
 def pregunta_03():
@@ -57,7 +78,17 @@ def pregunta_03():
     ]
 
     """
-    return
+    data = load_data(r"data.csv")
+    sums = {}
+    for row in data:
+        letter = row[0]
+        value = int(row[1])
+        if letter in sums:
+            sums[letter] += value
+        else:
+            sums[letter] = value
+    sorted_sums = sorted(sums.items())
+    return sorted_sums
 
 
 def pregunta_04():
@@ -82,7 +113,13 @@ def pregunta_04():
     ]
 
     """
-    return
+    data = load_data(r"data.csv")
+    count_dict = {}
+    for row in data:
+        count_dict[row[2][5:7]] = count_dict.get(row[2][5:7], 0) + 1
+
+    sorted_count = sorted(count_dict.items())
+    return sorted_count
 
 
 def pregunta_05():
@@ -100,7 +137,23 @@ def pregunta_05():
     ]
 
     """
-    return
+    data = load_data(r"data.csv")
+    sums = {}
+    for row in data:
+        letter = row[0]
+        value = int(row[1])
+        if letter in sums:
+            if sums[letter][0] <= value:
+                sums[letter][0] = value
+            if sums[letter][1] > value:
+                sums[letter][1] = value
+        else:
+            sums[letter] = [value, value]
+    
+    sorted_count = sorted(sums.items())
+
+    out = [(letter, *values) for letter, values in sorted_count] 
+    return  out
 
 
 def pregunta_06():
@@ -125,7 +178,23 @@ def pregunta_06():
     ]
 
     """
-    return
+    data = load_data(r"data.csv")
+    list_explode = {}
+    for row in data:
+        for item in row[4].split(","):
+            key, value = item.split(":")
+            if key in list_explode:
+                list_explode[key].append(int(value))
+            else:
+                list_explode[key] = [int(value)]
+
+    out = []
+    for key, values in list_explode.items():
+        out.append((key, min(values), max(values)))
+
+    sorted_out = sorted(out)
+    return sorted_out
+
 
 
 def pregunta_07():
@@ -149,7 +218,20 @@ def pregunta_07():
     ]
 
     """
-    return
+    data = load_data(r"data.csv")
+    out = {}
+    for row in data:
+        colum1 = int(row[1])
+        column0 = row[0]
+
+        if colum1 in out:
+            out[colum1].append(column0)
+        else:
+            out[colum1] = [column0]
+
+    sorted_out = sorted(out.items())
+    return sorted_out
+
 
 
 def pregunta_08():
@@ -174,7 +256,12 @@ def pregunta_08():
     ]
 
     """
-    return
+    input_data = pregunta_07()
+
+    out = [(key, sorted(list(set(values)))) for key, values in input_data]
+
+    return out
+
 
 
 def pregunta_09():
@@ -197,7 +284,15 @@ def pregunta_09():
     }
 
     """
-    return
+    data = load_data(r"data.csv")
+    list_explode = {}
+    for row in data:
+        for item in row[4].split(","):
+            key, _ = item.split(":")
+            list_explode[key] = list_explode.get(key, 0) + 1
+ 
+    sorted_out = dict(sorted(list_explode.items()))
+    return sorted_out
 
 
 def pregunta_10():
@@ -218,7 +313,14 @@ def pregunta_10():
 
 
     """
-    return
+
+    data = load_data(r"data.csv")
+    list_explode = []
+    for row in data:
+        list_explode.append(
+            (row[0], len(row[3].split(",")), len(row[4].split(","))))
+
+    return list_explode
 
 
 def pregunta_11():
@@ -237,9 +339,17 @@ def pregunta_11():
         "g": 35,
     }
 
-
     """
-    return
+
+    data = load_data(r"data.csv")
+    list_explode = {}
+    for row in data:
+        for item in row[3].split(","):
+            
+            list_explode[item] = list_explode.get(item, 0) + int(row[1])
+    
+    sorted_out = sorted(list_explode.items())
+    return dict(sorted_out)
 
 
 def pregunta_12():
@@ -257,4 +367,18 @@ def pregunta_12():
     }
 
     """
-    return
+    data = load_data(r"data.csv")
+    list_explode = {}
+    for row in data:
+        sum_row = []
+        for item in row[4].split(","):
+            _, value = item.split(":")
+            sum_row.append(int(value))
+
+        list_explode[row[0]] = list_explode.get(row[0], 0) + sum(sum_row)
+    
+    sorted_out = dict(sorted(list_explode.items()))
+
+    return sorted_out
+
+#print(pregunta_12())
