@@ -23,7 +23,7 @@ def load_data(file_path):
 
 def pregunta_01():
     """
-    Retorne la suma de la segunda columna.
+    Retorne la suma de la segunda columna .
 
     Rta/
     214
